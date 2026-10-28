@@ -85,10 +85,20 @@ checks syntax and expected configuration, not GitHub's runner semantics.
 
 ### CI and delivery status
 
-Workflow prepared and locally checked; **hosted CI has not yet run at this
-recording boundary**. Next action: push the requested branch, create/attach the
-PR, inspect the actual GitHub checks, and record their outcome here. No claim of
-passing GitHub CI is made from local checks.
+Created and attached [PR #3](https://github.com/AarooshB/ContextDiff/pull/3).
+The HTTPS push was rejected because the saved OAuth token lacks `workflow`
+scope; existing authenticated SSH successfully pushed the complete branch.
+The connected GitHub plugin returned 403 for PR creation, so the authenticated
+`gh pr create` CLI fallback created the requested PR.
+
+The [first hosted push run](https://github.com/AarooshB/ContextDiff/actions/runs/40787056608)
+failed before starting any jobs, with no job logs. The job-level cache expression
+used `runner.temp`, which is unavailable in job-level `env` according to
+[GitHub's context availability reference](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#context-availability).
+Changed it to `github.workspace` under the ignored `.venv/tiktoken-cache` path.
+The basic local YAML parse did not catch this GitHub expression-context rule.
+Next action: push the correction and inspect the actual hosted checks. Hosted
+CI success is still pending at this record boundary.
 
 Remaining boundaries: browser capture tested on this one Chrome/macOS environment;
 other supported Python versions and desktop platforms are not newly verified.
