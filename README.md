@@ -1,18 +1,30 @@
 # ContextDiff
 
-**See what changed in supplied LLM context snapshots, and which watched phrases disappeared.**
+Compare two LLM context snapshots to see block changes, token reductions, and missing watched phrases—all locally, without model calls.
 
-ContextDiff compares two versioned JSON snapshots with stable block IDs, or two UTF-8 text documents. It reports additions, removals, retained and modified blocks, bounded line edits, reference content-token changes, and evidence for explicitly watched phrases.
+![Real ContextDiff browser demo: the lossy handoff drops the watched constraint; the preserved handoff keeps it](docs/assets/contextdiff-demo.gif)
 
-**Local demonstration delivered:** Python engine, Streamlit interface, synthetic handoff/retrieval scenarios, checked reports, and repeatable setup. Start with the [90-second demo](docs/DEMO.md).
+Context compression saves tokens, but important information can disappear. A token total alone does not show which instruction or constraint went missing. ContextDiff makes those visible changes reviewable in the supplied before/after snapshots.
 
-This is an independent engineering demonstration relevant to Nessie's public focus on reusable context, with no affiliation or integration. See [research and uncertainty](docs/RESEARCH.md).
+In this synthetic demo, the lossy handoff shrinks **271 → 52 tokens** and drops `24-hour idempotency window`. The preserved alternative uses **64 tokens** and includes the phrase in its new summary. ContextDiff compares these handoffs; it does not generate them or assess their semantic correctness.
+
+- **Block changes:** additions, removals, retained and modified blocks, matched by stable IDs.
+- **Source evidence:** before/after text, positions, metadata changes, and bounded line diffs.
+- **Reference token counts:** totals, deltas, and breakdowns using `cl100k_base`.
+- **Watched phrases:** literal checks with matching source IDs, including phrases moved into a summary.
+- **Local workflow:** paste or upload JSON/text, try synthetic examples, filter results, and download a full JSON report.
+
+The 24-second animation captures the actual app in Chrome. See the [demo guide](docs/DEMO.md) for the recording method, a static screenshot, and the longer walkthrough. Watches are lexical review signals: paraphrases can be missed and negation can match.
+
+This is an independent engineering demonstration, with no Nessie affiliation or integration. See [research and uncertainty](docs/RESEARCH.md).
 
 ## Install and verify
 
-Run from the repository root. Python 3.10+ is declared; **only Python 3.12.2 on macOS arm64 has been tested**. Python 3.12 is recommended. Pip resolves dependencies compatible with the chosen Python; the installed Streamlit 1.66.1 itself requires Python 3.11+.
+Clone the repository, then run from its root. Python 3.10+ is declared; **only Python 3.12.2 on macOS arm64 has been tested**. Python 3.12 is recommended. Pip resolves dependencies compatible with the chosen Python; the installed Streamlit 1.66.1 itself requires Python 3.11+.
 
 ```sh
+git clone https://github.com/AarooshB/ContextDiff.git
+cd ContextDiff
 python3.12 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements-tested.txt
@@ -22,13 +34,20 @@ python -m pip install --no-deps -e ".[dev]"
 export TIKTOKEN_CACHE_DIR="$PWD/.venv/tiktoken-cache"
 python -c "import tiktoken; tiktoken.get_encoding('cl100k_base')"
 
-python -m pytest
-python -m ruff check .
-python -m ruff format --check .
 python -m streamlit run app.py --server.address 127.0.0.1
 ```
 
 Tested versions: ContextDiff 0.1.0, tiktoken 0.14.0, Streamlit 1.66.1, pytest 9.2.0, Ruff 0.17.3. [requirements-tested.txt](requirements-tested.txt) records all 42 installed dependency/tool distributions, including pip, without local editable paths. It is a snapshot of the tested macOS/Python environment, not a cross-platform lockfile or compatibility matrix. Isolated build dependencies are resolved separately. To use the broader compatible ranges instead, install with `python -m pip install -e ".[dev]"`; that fresh-install path was also tested.
+
+To run the same checks as [GitHub Actions CI](.github/workflows/ci.yml), keep the warmed cache setting and use:
+
+```sh
+python -m pytest
+python -m ruff check .
+python -m ruff format --check .
+```
+
+CI runs on pushes and pull requests with Python 3.12 on Ubuntu, installs `.[dev]`, warms a dedicated tokenizer cache, then runs these three checks. The [Actions page](https://github.com/AarooshB/ContextDiff/actions/workflows/ci.yml) shows actual GitHub run status; local results alone do not establish a passing hosted run.
 
 The full suite passes **141 tests**, including 18 AppTest cases and 9 real-tokenizer integration cases, with no skips. Ruff lint/format and `pip check` pass. Both a fresh range-based install and a second fresh snapshot-based install succeeded. Browser checks cover real uploads/downloads, validation/recovery, filters, literal source, newline differences, and laptop/narrow layout. Exact commands, failures/recovery, environment, timing boundaries, and acceptance evidence are recorded in [PROGRESS](docs/PROGRESS.md).
 Installing dependencies and warming an empty tokenizer cache require network access. The warm-up downloads public vocabulary data, never snapshot content. In the installed tiktoken, `TIKTOKEN_CACHE_DIR` selects the cache; absent that setting, `DATA_GYM_CACHE_DIR` or a temporary `data-gym-cache` directory is used. An empty cache setting disables caching. Preserve the warmed cache and use the same setting in later processes. Removing `.venv` also removes this suggested cache.
@@ -91,7 +110,7 @@ The [version-1 JSON schema and report contract](docs/ARCHITECTURE.md) specify al
 
 ## Demonstration and verification
 
-Follow [DEMO](docs/DEMO.md) for the paced script, actual screenshot, results table, offline verification method, and timing reproduction. Warmed engine-only sample medians ranged from 0.024 to 0.072 ms across 100 runs per pair on the tested machine; the repetitive full-source fallback median was 0.560 ms. These exclude parsing, encoding setup, serialization, and UI rendering, and promise no production scalability or model improvement.
+Follow [DEMO](docs/DEMO.md) for the animated browser demo, paced script, actual screenshot, results table, offline verification method, and timing reproduction. Warmed engine-only sample medians ranged from 0.024 to 0.072 ms across 100 runs per pair on the tested machine; the repetitive full-source fallback median was 0.560 ms. These exclude parsing, encoding setup, serialization, and UI rendering, and promise no production scalability or model improvement.
 
 Stages 1–3 are complete within the recorded verification boundaries. Other Python versions, operating systems, dependency resolutions, and machine-wide/browser offline operation remain untested. No private data, credentials, publication, deployment, or outreach is needed for this demo. No further stage is scheduled.
 
