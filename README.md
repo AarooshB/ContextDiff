@@ -20,7 +20,7 @@ This is an independent engineering demonstration, with no Nessie affiliation or 
 
 ## Install and verify
 
-Clone the repository, then run from its root. Python 3.10+ is declared; **only Python 3.12.2 on macOS arm64 has been tested**. Python 3.12 is recommended. Pip resolves dependencies compatible with the chosen Python; the installed Streamlit 1.66.1 itself requires Python 3.11+.
+Clone the repository, then run from its root. Python 3.10+ is declared; **the desktop app was verified on Python 3.12.2 / macOS arm64; automated CI also passes on Python 3.12.15 / Ubuntu**. Python 3.12 is recommended. Pip resolves dependencies compatible with the chosen Python; the installed Streamlit 1.66.1 itself requires Python 3.11+.
 
 ```sh
 git clone https://github.com/AarooshB/ContextDiff.git
@@ -47,12 +47,13 @@ python -m ruff check .
 python -m ruff format --check .
 ```
 
-CI runs on pushes and pull requests with Python 3.12 on Ubuntu, installs `.[dev]`, warms a dedicated tokenizer cache, then runs these three checks. The [Actions page](https://github.com/AarooshB/ContextDiff/actions/workflows/ci.yml) shows actual GitHub run status; local results alone do not establish a passing hosted run.
+CI runs on pushes and pull requests with Python 3.12 on Ubuntu, installs `.[dev]`, warms a dedicated tokenizer cache, then runs these three checks. The [Actions page](https://github.com/AarooshB/ContextDiff/actions/workflows/ci.yml) shows actual GitHub run status. Both [push](https://github.com/AarooshB/ContextDiff/actions/runs/40787446457) and [pull-request](https://github.com/AarooshB/ContextDiff/actions/runs/40787449118) runs passed all 141 tests and Ruff checks; exact evidence is in [PROGRESS](docs/PROGRESS.md).
 
 The full suite passes **141 tests**, including 18 AppTest cases and 9 real-tokenizer integration cases, with no skips. Ruff lint/format and `pip check` pass. Both a fresh range-based install and a second fresh snapshot-based install succeeded. Browser checks cover real uploads/downloads, validation/recovery, filters, literal source, newline differences, and laptop/narrow layout. Exact commands, failures/recovery, environment, timing boundaries, and acceptance evidence are recorded in [PROGRESS](docs/PROGRESS.md).
 Installing dependencies and warming an empty tokenizer cache require network access. The warm-up downloads public vocabulary data, never snapshot content. In the installed tiktoken, `TIKTOKEN_CACHE_DIR` selects the cache; absent that setting, `DATA_GYM_CACHE_DIR` or a temporary `data-gym-cache` directory is used. An empty cache setting disables caching. Preserve the warmed cache and use the same setting in later processes. Removing `.venv` also removes this suggested cache.
 
 The warmed app walkthrough passed with external outbound connections denied to the app process by macOS sandboxing, while localhost remained available. Both handoffs, retrieval, uploads, chart, filters, errors, and report download worked with real reference counts. The browser and the rest of the machine were not globally disconnected. [DEMO](docs/DEMO.md) documents this boundary and reproduction; cold-cache failure/recovery also has separate core integration tests.
+
 ## Use the local app
 
 Open [ContextDiff on localhost](http://127.0.0.1:8501) after running the launch command above. The config also defaults to localhost, disables usage statistics, and caps upload transport at 1 MiB. Python enforces the stricter 256 KiB cap per input for both paste and upload. No API key is needed. Stop the server with Ctrl+C. File watching is disabled; reload the browser or restart the server after source edits.
@@ -112,7 +113,7 @@ The [version-1 JSON schema and report contract](docs/ARCHITECTURE.md) specify al
 
 Follow [DEMO](docs/DEMO.md) for the animated browser demo, paced script, actual screenshot, results table, offline verification method, and timing reproduction. Warmed engine-only sample medians ranged from 0.024 to 0.072 ms across 100 runs per pair on the tested machine; the repetitive full-source fallback median was 0.560 ms. These exclude parsing, encoding setup, serialization, and UI rendering, and promise no production scalability or model improvement.
 
-Stages 1–3 are complete within the recorded verification boundaries. Other Python versions, operating systems, dependency resolutions, and machine-wide/browser offline operation remain untested. No private data, credentials, publication, deployment, or outreach is needed for this demo. No further stage is scheduled.
+Stages 1–3 are complete within the recorded verification boundaries. Other Python versions, desktop/browser behavior on other operating systems, dependency resolutions beyond the recorded environments, and machine-wide/browser offline operation remain untested. No private data, credentials, publication, deployment, or outreach is needed for this demo. No further stage is scheduled.
 
 ## Project documents
 

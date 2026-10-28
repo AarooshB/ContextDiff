@@ -97,12 +97,30 @@ used `runner.temp`, which is unavailable in job-level `env` according to
 [GitHub's context availability reference](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#context-availability).
 Changed it to `github.workspace` under the ignored `.venv/tiktoken-cache` path.
 The basic local YAML parse did not catch this GitHub expression-context rule.
-Next action: push the correction and inspect the actual hosted checks. Hosted
-CI success is still pending at this record boundary.
+Both corrected hosted runs at commit `582bcca09457c26d958cbc58fc8fa572eab278cc`
+completed with **success**:
+
+- [Push run 40787446457](https://github.com/AarooshB/ContextDiff/actions/runs/40787446457).
+- [Pull-request run 40787449118](https://github.com/AarooshB/ContextDiff/actions/runs/40787449118).
+
+Downloaded the actual PR job logs: Ubuntu/Linux **Python 3.12.15**, pytest 9.2.0,
+**141 passed in 6.41s**, no skips; Ruff lint passed and **26 files already
+formatted**. Dependency installation and vocabulary warm-up also succeeded.
+This establishes hosted CI execution, not just local configuration validation.
+GitHub's contents API confirms the published GIF is exactly **2,800,794 bytes**;
+the rendered-README API contains the correct relative GIF image source. Local
+Markdown audit also resolved **36 links/images**, and GIF signature validation
+passed. README distinguishes actual desktop/browser verification on macOS from
+automated checks on Ubuntu.
+
+The final follow-up commit only records these successful runs and updates README
+platform wording. Its own hosted results are checked before final delivery;
+this paragraph's linked runs identify the exact implementation/workflow commit
+already verified. Next action for the user: review and merge PR #3 when ready.
 
 Remaining boundaries: browser capture tested on this one Chrome/macOS environment;
 other supported Python versions and desktop platforms are not newly verified.
-Ubuntu verification depends on hosted CI. This follow-up does not repeat the
+Ubuntu automated verification passed as recorded above; an Ubuntu browser walkthrough was not performed. This follow-up does not repeat the
 Stage 3 app-process offline sandbox exercise; its precise historical boundary
 remains below. Playback speed depends on the viewer. No deployment, merge, or
 outreach is authorized by this PR delivery request.
