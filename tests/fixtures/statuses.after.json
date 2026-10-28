@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "label": "Synthetic after",
+  "blocks": [
+    {"id": "task", "kind": "message", "role": "user", "content": "Fix retries safely now."},
+    {"id": "keep", "kind": "instruction", "role": "system", "content": "Keep logs private."},
+    {"id": "new", "kind": "summary", "content": "Done."},
+    {"id": "dup-b", "kind": "memory", "content": "duplicate"},
+    {"id": "dup-a", "kind": "memory", "content": "duplicate"}
+  ],
+  "watchlist": []
+}

@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "label": "Synthetic before",
+  "blocks": [
+    {"id": "keep", "kind": "instruction", "role": "system", "content": "Keep logs private."},
+    {"id": "task", "kind": "message", "role": "user", "content": "Fix retries now."},
+    {"id": "gone", "kind": "tool_result", "content": "24-hour idempotency window"},
+    {"id": "dup-a", "kind": "memory", "content": "duplicate"},
+    {"id": "dup-b", "kind": "memory", "content": "duplicate"}
+  ],
+  "watchlist": [
+    {"id": "privacy", "text": "LOGS \tPRIVATE.", "note": "Literal phrase only."},
+    {"id": "window", "text": "24-hour idempotency window"},
+    {"id": "baseline", "text": "unseen"}
+  ]
+}

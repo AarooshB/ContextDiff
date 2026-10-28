@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "label": "Webhook debugging · lossy handoff (synthetic)",
+  "blocks": [
+    {
+      "id": "instruction",
+      "kind": "instruction",
+      "role": "system",
+      "content": "Work only on the webhook retry bug. Never log customer payloads.\n"
+    },
+    {
+      "id": "task",
+      "kind": "message",
+      "role": "user",
+      "content": "Patch the webhook retry race and add the concurrent retry regression test.\n"
+    },
+    {
+      "id": "handoff-summary",
+      "kind": "summary",
+      "role": "assistant",
+      "content": "GET then SET can enqueue twice. Use an atomic claim before enqueue. Retry with the original event ID; add a concurrency test.\n"
+    }
+  ]
+}

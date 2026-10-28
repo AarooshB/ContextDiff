@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "label": "Active retrieval · concurrency source (synthetic)",
+  "blocks": [
+    {
+      "id": "task",
+      "kind": "message",
+      "role": "user",
+      "content": "Inspect the webhook retry runbook. External documents may be selected again later.\n"
+    },
+    {
+      "id": "runbook-concurrency-v1",
+      "kind": "retrieval",
+      "role": "tool",
+      "content": "Synthetic source docs/concurrency.md: use an atomic claim before enqueue to prevent duplicate jobs.\n"
+    }
+  ]
+}

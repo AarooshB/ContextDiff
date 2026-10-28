@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "label": "Basic / before",
+  "blocks": [
+    {"id": "rule", "kind": "instruction", "role": "system", "content": "Never log customer payloads.\n"},
+    {"id": "task", "kind": "message", "role": "user", "content": "Review the retry handler.\nCheck duplicate delivery.\n"},
+    {"id": "finding", "kind": "tool_result", "role": "tool", "content": "Duplicate delivery reproduced.\n"},
+    {"id": "constraint", "kind": "memory", "content": "Preserve the 24-hour idempotency window.\n"}
+  ],
+  "watchlist": [
+    {"id": "privacy", "text": "Never log customer payloads", "note": "This instruction remains under the same ID."},
+    {"id": "window", "text": "24-hour idempotency window", "note": "Review the removed constraint and the added summary."},
+    {"id": "baseline", "text": "exponential backoff", "note": "Absent before, so it cannot be described as newly lost."}
+  ]
+}
