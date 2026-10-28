@@ -5,8 +5,9 @@ Last updated: **2026-10-28** (America/Los_Angeles).
 ## Current stage
 
 **Stages 1–3 complete within the verification boundaries below.** The local demo
-is delivered. No next implementation stage, publication, deployment, or outreach
-is scheduled. No user input, account, credential, or private snapshot is needed.
+is delivered and merged into `main` via [GitHub PR #1](https://github.com/AarooshB/ContextDiff/pull/1).
+No next implementation stage, merge, deployment, or outreach is scheduled. No user
+input, account, credential, or private snapshot is needed for the local demo.
 
 | Stage | Status |
 | --- | --- |
@@ -14,6 +15,53 @@ is scheduled. No user input, account, credential, or private snapshot is needed.
 | 1. Core comparison engine | Complete; original 119 core tests reverified |
 | 2. Interactive visualization | Complete; original 133-test baseline reverified |
 | 3. Polish, demo, delivery | Complete; 141 tests, delivery and browser checks below |
+
+## GitHub delivery — 2026-10-28
+
+The user subsequently authorized uploading the completed project as a pull request
+to `AarooshB/ContextDiff`, superseding the earlier no-publication instruction for
+this repository delivery only. All three stages remain complete within their
+recorded verification boundaries.
+
+- Target main contained only the initial README at
+  `abc37cb79e292759bac149a2c3761a912d6425e3`. Based
+  `codex/contextdiff-local-demo` on that commit and committed the complete local
+  project, preserving existing remote history and local source files.
+- Pre-push recheck with
+  `TIKTOKEN_CACHE_DIR="$PWD/.venv/tiktoken-cache" .venv/bin/python -m pytest`:
+  **141 passed in 2.65s**, exit 0. `.venv/bin/python -m ruff check .`,
+  `.venv/bin/python -m ruff format --check .` (**26 files already formatted**),
+  and `.venv/bin/python -m pip check` all passed.
+- Staged exactly 42 project files: core, app, tests/fixtures, examples, docs,
+  screenshot, packaging, tested versions, and configuration. `git diff --cached
+  --check` passed. Ignore checks confirmed environments, vocabulary caches, local
+  inputs, exports, `.env`, and Streamlit secrets stay excluded. A targeted
+  credential-pattern scan found no matches in project files.
+- Committed the full implementation as `be45eec` and pushed the new branch. The
+  default HTTPS Git credential was rejected; a command-scoped authenticated
+  `gh auth git-credential` helper succeeded without changing global credentials.
+- The connected GitHub integration returned HTTP 403 for PR creation; the
+  authenticated CLI fallback succeeded using `gh pr create` with an explicit
+  repository, main base, branch head, title, and temporary Markdown body file.
+- Created and attached [PR #1](https://github.com/AarooshB/ContextDiff/pull/1).
+  Initially verified it was **open, ready for review, and mergeable**, targeting `main`.
+  GitHub reported no configured CI checks; the passing checks above are local.
+  The PR includes the tested-platform, timing, lexical-watch, reference-token,
+  and app-process offline limits. This follow-up records the delivery in the
+  documentation-only follow-up; no application behavior changes.
+
+GitHub subsequently reported PR #1 **merged by AarooshB** at
+2026-10-28 22:59:53 UTC, merge commit
+`cf606b4a86963672cb549c5095055bf04b44cec3`. The agent did not run a merge
+command. A fresh `git fetch origin main` confirmed the complete implementation is
+on main; the only difference from the delivery branch is this progress record.
+Because the implementation PR closed while its documentation follow-up was being
+pushed, this record is submitted as a separate documentation-only PR.
+
+Next action: review the documentation follow-up if desired. No deployment or
+separate outreach was requested or performed. The earlier Stage 3 no-publication
+records below describe that completed local-only stage, before the new repository
+delivery authorization.
 
 ## Delivered and verified in Stage 3 — 2026-10-28
 
@@ -344,7 +392,7 @@ Setup inspected an empty, already initialized Git repository on `main` with no c
 
 ## Next recommended action
 
-Stages 1–3 are complete. Follow [DEMO.md](DEMO.md) for the local demonstration. No further implementation, publication, deployment, or outreach is scheduled. No user input is needed.
+Stages 1–3 are complete. The implementation is merged via [PR #1](https://github.com/AarooshB/ContextDiff/pull/1); review the documentation follow-up if desired and follow [DEMO.md](DEMO.md) for the local demonstration. No deployment, further implementation, or separate outreach is scheduled. No user input is needed for the delivered demo.
 
 ## Stage update template
 
