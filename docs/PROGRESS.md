@@ -5,7 +5,7 @@ Last updated: **2026-10-28** (America/Los_Angeles).
 ## Current stage
 
 **Stages 1–3 complete within the verification boundaries below.** The local demo
-is delivered and available for review in [GitHub PR #1](https://github.com/AarooshB/ContextDiff/pull/1).
+is delivered and merged into `main` via [GitHub PR #1](https://github.com/AarooshB/ContextDiff/pull/1).
 No next implementation stage, merge, deployment, or outreach is scheduled. No user
 input, account, credential, or private snapshot is needed for the local demo.
 
@@ -44,15 +44,24 @@ recorded verification boundaries.
   authenticated CLI fallback succeeded using `gh pr create` with an explicit
   repository, main base, branch head, title, and temporary Markdown body file.
 - Created and attached [PR #1](https://github.com/AarooshB/ContextDiff/pull/1).
-  Verified it is **open, ready for review, and mergeable**, targeting `main`.
+  Initially verified it was **open, ready for review, and mergeable**, targeting `main`.
   GitHub reported no configured CI checks; the passing checks above are local.
   The PR includes the tested-platform, timing, lexical-watch, reference-token,
   and app-process offline limits. This follow-up records the delivery in the
-  same PR; no application behavior changes.
+  documentation-only follow-up; no application behavior changes.
 
-Next action: review the PR. No merge, deployment, or separate outreach was
-requested or performed. The earlier Stage 3 no-publication records below describe
-that completed local-only stage, before this new authorization.
+GitHub subsequently reported PR #1 **merged by AarooshB** at
+2026-10-28 22:59:53 UTC, merge commit
+`cf606b4a86963672cb549c5095055bf04b44cec3`. The agent did not run a merge
+command. A fresh `git fetch origin main` confirmed the complete implementation is
+on main; the only difference from the delivery branch is this progress record.
+Because the implementation PR closed while its documentation follow-up was being
+pushed, this record is submitted as a separate documentation-only PR.
+
+Next action: review the documentation follow-up if desired. No deployment or
+separate outreach was requested or performed. The earlier Stage 3 no-publication
+records below describe that completed local-only stage, before the new repository
+delivery authorization.
 
 ## Delivered and verified in Stage 3 — 2026-10-28
 
@@ -383,7 +392,7 @@ Setup inspected an empty, already initialized Git repository on `main` with no c
 
 ## Next recommended action
 
-Stages 1–3 are complete. Review [PR #1](https://github.com/AarooshB/ContextDiff/pull/1) and follow [DEMO.md](DEMO.md) for the local demonstration. No merge, deployment, further implementation, or separate outreach is scheduled. No user input is needed for the delivered demo.
+Stages 1–3 are complete. The implementation is merged via [PR #1](https://github.com/AarooshB/ContextDiff/pull/1); review the documentation follow-up if desired and follow [DEMO.md](DEMO.md) for the local demonstration. No deployment, further implementation, or separate outreach is scheduled. No user input is needed for the delivered demo.
 
 ## Stage update template
 
