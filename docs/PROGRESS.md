@@ -6,8 +6,9 @@ Last updated: **2026-10-28** (America/Los_Angeles).
 
 **Stages 1–3 complete within the verification boundaries below.** The local demo
 is delivered and merged into `main` via [GitHub PR #1](https://github.com/AarooshB/ContextDiff/pull/1).
-No next implementation stage, merge, deployment, or outreach is scheduled. No user
-input, account, credential, or private snapshot is needed for the local demo.
+The user requested a post-stage GitHub polish PR: real-browser animation, README,
+minimal CI, and final verification. That delivery is recorded below. No application
+feature expansion, deployment, or outreach is included.
 
 | Stage | Status |
 | --- | --- |
@@ -15,6 +16,114 @@ input, account, credential, or private snapshot is needed for the local demo.
 | 1. Core comparison engine | Complete; original 119 core tests reverified |
 | 2. Interactive visualization | Complete; original 133-test baseline reverified |
 | 3. Polish, demo, delivery | Complete; 141 tests, delivery and browser checks below |
+
+## Final GitHub polish and automated demo — 2026-10-28
+
+User authorization: prepare all polish changes as a new GitHub pull request.
+Based `codex/github-polish-demo` on current `origin/main` (`e86f95f`), preserving
+the merged implementation and delivery records. Core code, app behavior, input
+schema, report contracts, and project dependencies are unchanged.
+
+### Deliverables
+
+- README now opens with one sentence, the real animated demo, the compression
+  problem, checked lossy/preserved observations, and five key features. Added
+  clone instructions and moved verification commands into their own block;
+  retained engine usage, cache/offline behavior, limits, and technical links.
+- `docs/assets/contextdiff-demo.gif`: **23.81 seconds, 1280 × 960, 2,800,794 bytes
+  (2.80 MB / 2.67 MiB), looping GIF, 381 encoded frames**. Under the 8 MB target.
+- `scripts/record_demo.cjs` automates real headless Chrome using optional
+  Playwright. It selects lossy, Load sample, Compare, shows 271 → 52, highlights
+  the missing window phrase, then selects/loads/compares preserved, shows 271 →
+  64, and highlights present-after evidence in `handoff-summary`. The existing
+  static screenshot remains. DEMO describes reproduction and exact limitations.
+- Capture method: **63 actual browser screenshots**, including ten intermediate
+  positions per scroll, encoded by FFmpeg with shared-palette quantization and
+  16 fps. Held reading pauses and omitted initialization/rerun waits make this a
+  paced screenshot animation, not a continuous real-time recording. Native text
+  selection highlights the actual phrase. No fabricated UI, overlays, altered
+  metrics, source edits, model calls, or private inputs. Inspected original
+  metric/watch frames and a frame decoded from the final GIF for readable text.
+- Recording tools: Node.js 20.17.0, bundled Playwright **1.62.1**, installed Chrome
+  **156.0.8078.49**, FFmpeg **7.1**. Tools are optional delivery tooling, outside
+  runtime dependencies and CI. Only the capture script and final GIF enter Git;
+  PNGs and downloaded reports remain temporary.
+- `.github/workflows/ci.yml`: push + pull_request, `ubuntu-latest`, Python 3.12,
+  `contents: read`, 10-minute timeout, checkout/setup-python v7, range-based
+  `.[dev]` installation, explicit tokenizer cache warm-up, pytest, Ruff lint and
+  formatting checks. No credentials or model services required. Both action v7
+  refs were confirmed with GitHub's API. Ruby Psych parsed the YAML; trigger,
+  permissions, version, step commands, and shared cache were checked locally.
+  Full hosted validation is recorded separately below when available.
+
+### Verification and commands
+
+Fresh CPython **3.12.2**, macOS arm64; isolated venv at
+`/private/tmp/contextdiff-polish-venv` and new vocabulary cache at
+`/private/tmp/contextdiff-polish-cache`. Versions match requirements-tested.txt.
+
+| Command/check | Observed result |
+| --- | --- |
+| `python3.12 -m venv /private/tmp/contextdiff-polish-venv` | Exit 0; fresh environment. |
+| `.../bin/python -m pip install -r requirements-tested.txt` then `.../bin/python -m pip install --no-deps -e '.[dev]'` | Both exit 0 with network permission; README's snapshot installation reverified. Initial sandboxed install failed at DNS; retry outside the network sandbox succeeded. |
+| `TIKTOKEN_CACHE_DIR=/private/tmp/contextdiff-polish-cache .../bin/python -c "import tiktoken; tiktoken.get_encoding('cl100k_base')"` | Exit 0; new public vocabulary cache warmed. |
+| `TIKTOKEN_CACHE_DIR=/private/tmp/contextdiff-polish-cache .../bin/python -m streamlit run app.py --server.address 127.0.0.1 --server.port 8505 --server.headless true` | Fresh app launched on localhost:8505 with approved local socket access. Earlier sandboxed launch on :8504 failed binding; approved launch succeeded. |
+| `TIKTOKEN_CACHE_DIR=/private/tmp/contextdiff-polish-cache .../bin/python -m pytest` | **141 passed in 4.95s**, exit 0, no skips; includes 18 AppTest and 9 real-tokenizer integration cases. |
+| `.../bin/python -m ruff check .` | Exit 0; all checks passed. |
+| `.../bin/python -m ruff format --check .` | Exit 0; 26 files already formatted. |
+| `.../bin/python -m pip check` | Exit 0; no broken requirements. Restricted pip-cache warning only. |
+| `DEMO_URL=http://127.0.0.1:8505 NODE_PATH=<bundled-packages> node scripts/record_demo.cjs` | Exit 0; both real UI paths, displayed token/status goldens, first watch state/source IDs, and real JSON downloads asserted; no browser page errors or app exception panels. First attempt encountered an ambiguous combobox after results added filter widgets; recorder now names Bundled example explicitly, successful rerun. |
+| Separate Python audit of saved lossy and preserved JSON downloads | Both equal the entire real-tokenizer core report, including full sources, all watches, positions, encoding, tokens, and limitations. |
+| `ffprobe -v error -show_entries format=duration,size -show_entries stream=width,height,nb_frames -of json docs/assets/contextdiff-demo.gif` | 23.810000 s, 2,800,794 bytes, 1280×960, 381 frames. Final GIF frame also decoded with FFmpeg and visually inspected. |
+| `node --check scripts/record_demo.cjs` / `git diff --check` | Exit 0. |
+
+Local workflow validation uses Ruby's bundled YAML parser (its YAML 1.1 `on`
+key becomes boolean `true`; GitHub's workflow syntax treats `on` as the trigger).
+No actionlint, Node YAML package, or Python PyYAML was installed; parser probes
+for the latter two failed, so the available standard library was used. This
+checks syntax and expected configuration, not GitHub's runner semantics.
+
+### CI and delivery status
+
+Created and attached [PR #3](https://github.com/AarooshB/ContextDiff/pull/3).
+The HTTPS push was rejected because the saved OAuth token lacks `workflow`
+scope; existing authenticated SSH successfully pushed the complete branch.
+The connected GitHub plugin returned 403 for PR creation, so the authenticated
+`gh pr create` CLI fallback created the requested PR.
+
+The [first hosted push run](https://github.com/AarooshB/ContextDiff/actions/runs/40787056608)
+failed before starting any jobs, with no job logs. The job-level cache expression
+used `runner.temp`, which is unavailable in job-level `env` according to
+[GitHub's context availability reference](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#context-availability).
+Changed it to `github.workspace` under the ignored `.venv/tiktoken-cache` path.
+The basic local YAML parse did not catch this GitHub expression-context rule.
+Both corrected hosted runs at commit `582bcca09457c26d958cbc58fc8fa572eab278cc`
+completed with **success**:
+
+- [Push run 40787446457](https://github.com/AarooshB/ContextDiff/actions/runs/40787446457).
+- [Pull-request run 40787449118](https://github.com/AarooshB/ContextDiff/actions/runs/40787449118).
+
+Downloaded the actual PR job logs: Ubuntu/Linux **Python 3.12.15**, pytest 9.2.0,
+**141 passed in 6.41s**, no skips; Ruff lint passed and **26 files already
+formatted**. Dependency installation and vocabulary warm-up also succeeded.
+This establishes hosted CI execution, not just local configuration validation.
+GitHub's contents API confirms the published GIF is exactly **2,800,794 bytes**;
+the rendered-README API contains the correct relative GIF image source. Local
+Markdown audit also resolved **36 links/images**, and GIF signature validation
+passed. README distinguishes actual desktop/browser verification on macOS from
+automated checks on Ubuntu.
+
+The final follow-up commit only records these successful runs and updates README
+platform wording. Its own hosted results are checked before final delivery;
+this paragraph's linked runs identify the exact implementation/workflow commit
+already verified. Next action for the user: review and merge PR #3 when ready.
+
+Remaining boundaries: browser capture tested on this one Chrome/macOS environment;
+other supported Python versions and desktop platforms are not newly verified.
+Ubuntu automated verification passed as recorded above; an Ubuntu browser walkthrough was not performed. This follow-up does not repeat the
+Stage 3 app-process offline sandbox exercise; its precise historical boundary
+remains below. Playback speed depends on the viewer. No deployment, merge, or
+outreach is authorized by this PR delivery request.
 
 ## GitHub delivery — 2026-10-28
 

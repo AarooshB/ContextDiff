@@ -4,6 +4,44 @@ All inputs are synthetic. This is a comparison of supplied visible context, with
 no Nessie affiliation, integration, provider export, or measured model outcome.
 Use a laptop browser; the input columns also stack at narrow widths.
 
+## Automated browser demo
+
+![Actual lossy and preserved ContextDiff handoffs](assets/contextdiff-demo.gif)
+
+The looping GIF is **23.81 seconds, 1280 × 960, 2,800,794 bytes (2.80 MB)**.
+It contains real headless Chrome viewport captures of the running app, automated
+with Playwright and encoded with FFmpeg. The recording selects each handoff,
+clicks Load sample and Compare, shows 271 → 52 then 271 → 64 tokens, and uses
+native browser text selection to highlight `24-hour idempotency window` in the
+missing/present watch evidence. All inputs are synthetic.
+
+This is a paced screenshot sequence, not a continuous screen recording. There
+are 63 original captures, including intermediate scroll positions. Reading
+pauses are held frames; startup/rerun waits are omitted. FFmpeg uses a shared
+palette and 16 fps output (381 frames); metrics and application content are
+unaltered. No overlays or simulated application screens were added. The original
+static screenshot remains below as an accessible non-animated reference.
+
+To reproduce, start the warmed app using the README instructions, install
+**optional recording tools** outside the project environment, and run from the
+repository root. Chrome, Node.js, npm, and FFmpeg must already be available:
+
+```sh
+recording_tools=$(mktemp -d)
+npm install --prefix "$recording_tools" playwright
+NODE_PATH="$recording_tools/node_modules" node scripts/record_demo.cjs
+```
+
+Set `DEMO_URL` if the app uses a different localhost port. The script overwrites
+`docs/assets/contextdiff-demo.gif`, prints the capture directory and output
+metadata, and saves both actual JSON downloads in that temporary directory. It
+asserts the displayed token/status totals and downloaded watch evidence, and
+fails on browser page errors. Recording tools are not application dependencies
+or part of CI. The original capture used bundled Playwright 1.62.1, Chrome,
+FFmpeg, and the freshly installed Python app; exact versions and checks are in
+[PROGRESS](PROGRESS.md). Other browser/library versions can require selector
+updates. Playback speed and animation settings depend on the viewer.
+
 ## Prepare before presenting
 
 From the repository root, follow [README installation](../README.md). Tested:
@@ -158,4 +196,4 @@ for name in ("lossy", "preserved"):
 
 Fresh-install commands, resolved dependency pins, test counts, initial failed
 attempts, report validation, and remaining compatibility limits are in
-[PROGRESS](PROGRESS.md). No publication, deployment, or outreach was performed.
+[PROGRESS](PROGRESS.md). The original Stage 3 work was local only; subsequent GitHub delivery and CI status are recorded in PROGRESS. No deployment or outreach was performed.

@@ -4,6 +4,14 @@ Baseline established 2026-10-28. **Stages 1–3 are complete within the verifica
 
 Read AGENTS, PROJECT, ARCHITECTURE, DECISIONS, and PROGRESS before each stage. The architecture is the behavioral contract; update it and the decision log if a necessary implementation discovery changes the contract. Do not silently expand scope. Each stage has a complete prompt below and can be run in a separate Codex session after its prerequisite is complete.
 
+## Post-stage repository polish — 2026-10-28
+
+The user requested an automated real-browser demo, a clearer GitHub README,
+minimal Python 3.12 CI, final verification, and a new pull request. This delivery
+follow-up leaves application functionality, dependencies, and comparison
+contracts unchanged. Its checks and GitHub status are recorded in
+[PROGRESS.md](PROGRESS.md); no deployment or outreach is included.
+
 ## Schedule and scope budget
 
 | Stage | Time | Required outcome |
