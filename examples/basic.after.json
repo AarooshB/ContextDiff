@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "label": "Basic / after",
+  "blocks": [
+    {"id": "rule", "kind": "instruction", "role": "system", "content": "Never log customer payloads.\n"},
+    {"id": "task", "kind": "message", "role": "user", "content": "Review the retry handler.\nAdd a duplicate-delivery test.\n"},
+    {"id": "finding", "kind": "memory", "role": "assistant", "content": "Duplicate delivery reproduced.\n"},
+    {"id": "summary", "kind": "summary", "role": "assistant", "content": "Duplicate delivery needs a regression test.\n"}
+  ]
+}

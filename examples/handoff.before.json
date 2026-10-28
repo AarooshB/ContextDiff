@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "label": "Webhook debugging · before handoff (synthetic)",
+  "blocks": [
+    {
+      "id": "instruction",
+      "kind": "instruction",
+      "role": "system",
+      "content": "Work only on the webhook retry bug. Never log customer payloads.\n"
+    },
+    {
+      "id": "task",
+      "kind": "message",
+      "role": "user",
+      "content": "Investigate duplicate deliveries in the synthetic webhook worker. Identify the race before proposing a patch.\n"
+    },
+    {
+      "id": "constraint",
+      "kind": "message",
+      "role": "user",
+      "content": "Preserve the 24-hour idempotency window. A retry must reuse the original event ID; do not shorten retention when cleaning up keys.\n"
+    },
+    {
+      "id": "trace",
+      "kind": "tool_result",
+      "role": "tool",
+      "content": "Synthetic local trace; no production data.\n$ pytest tests/test_webhook_retries.py -q\nFAIL test_concurrent_retry_claims_once\nworker A: received event evt_demo_17, attempt 1\nworker B: received event evt_demo_17, attempt 2\nworker A: cache GET seen:evt_demo_17 -> absent\nworker B: cache GET seen:evt_demo_17 -> absent\nworker A: enqueue job -> accepted\nworker B: enqueue job -> accepted\nworker A: cache SET seen:evt_demo_17 -> success\nworker B: cache SET seen:evt_demo_17 -> success\nExpected one queued job, observed two.\nThe check and write are separate operations in worker.py.\nThe existing sequential retry case passes; it does not cover concurrency.\nA failed claim must not enqueue a second job.\nDo not treat this trace as a complete test run or a measured model outcome.\n"
+    },
+    {
+      "id": "finding",
+      "kind": "memory",
+      "role": "assistant",
+      "content": "The race is between GET and SET. Use an atomic claim before enqueue. Add a concurrent retry regression test.\n"
+    }
+  ],
+  "watchlist": [
+    {
+      "id": "window",
+      "text": "24-hour idempotency window",
+      "note": "Required retention constraint; inspect the summary when this phrase disappears."
+    },
+    {
+      "id": "claim",
+      "text": "atomic claim before enqueue",
+      "note": "This finding should move from memory into the handoff summary."
+    },
+    {
+      "id": "privacy",
+      "text": "Never log customer payloads",
+      "note": "Stable instruction in every handoff."
+    }
+  ]
+}

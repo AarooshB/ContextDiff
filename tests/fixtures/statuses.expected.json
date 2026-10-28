@@ -1,0 +1,13 @@
+{
+  "ordered_statuses": [["task", "modified"], ["keep", "retained"], ["new", "added"], ["dup-b", "retained"], ["dup-a", "retained"], ["gone", "removed"]],
+  "word_counter_totals": {"before": 11, "after": 10, "delta": -1},
+  "word_counter_kinds": {
+    "instruction": [3, 3, 0], "message": [3, 4, 1], "tool_result": [3, 0, -3],
+    "memory": [2, 2, 0], "retrieval": [0, 0, 0], "summary": [0, 1, 1]
+  },
+  "watches": [
+    ["privacy", "present_after", ["keep"], ["keep"]],
+    ["window", "missing_after", ["gone"], []],
+    ["baseline", "unverified_baseline", [], []]
+  ]
+}

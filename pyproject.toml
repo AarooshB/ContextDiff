@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68,<83"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "contextdiff"
+version = "0.1.0"
+description = "Local, stable-ID comparison of supplied LLM context snapshots"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["tiktoken>=0.12,<1", "streamlit>=1.50,<2"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "ruff>=0.14,<1"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = ["integration: exercises the real tokenizer and its vocabulary cache"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

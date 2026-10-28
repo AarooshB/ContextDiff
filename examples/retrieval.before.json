@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "label": "Active retrieval · retention source (synthetic)",
+  "blocks": [
+    {
+      "id": "task",
+      "kind": "message",
+      "role": "user",
+      "content": "Inspect the webhook retry runbook. External documents may be selected again later.\n"
+    },
+    {
+      "id": "runbook-retention-v1",
+      "kind": "retrieval",
+      "role": "tool",
+      "content": "Synthetic source docs/retention.md: retain event keys for a 24-hour idempotency window.\n"
+    }
+  ],
+  "watchlist": [
+    {
+      "id": "window",
+      "text": "24-hour idempotency window",
+      "note": "Removal from active context does not establish deletion from the external source. No retrieval service is connected."
+    }
+  ]
+}
